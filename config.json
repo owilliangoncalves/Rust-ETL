@@ -1,0 +1,12 @@
+{
+  "base_url": "https://dadosabertos.compras.gov.br",
+  "endpoints": {
+    "grupo_material": "/modulo-material/1_consultarGrupoMaterial",
+    "classe_material": "/modulo-material/2_consultarClasseMaterial",
+    "pdm_material": "/modulo-material/3_consultarPdmMaterial",
+    "item_material": "/modulo-material/4_consultarItemMaterial",
+    "natureza_despeza_material": "/modulo-material/5_consultarMaterialNaturezaDespesa",
+    "unidade_fornecimento_material": "/modulo-material/6_consultarMaterialUnidadeFornecimento",
+    "caracteristicas_material": "/modulo-material/7_consultarMaterialCaracteristicas"
+  }
+}
