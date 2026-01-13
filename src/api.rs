@@ -1,9 +1,9 @@
 use crate::models::Config;
+use indicatif::{ProgressBar, ProgressStyle};
+use reqwest::blocking::Client;
 use std::error::Error;
 use std::fs::File;
 use std::io::{self, BufReader};
-use reqwest::blocking::Client;
-use indicatif::{ProgressBar, ProgressStyle};
 
 /// Carrega as configurações do sistema a partir de um arquivo JSON.
 ///
@@ -22,17 +22,15 @@ pub fn load_config(custom_path: Option<&str>) -> Result<Config, Box<dyn Error>> 
     let path = custom_path.unwrap_or("config.json");
 
     // 2. Tenta abrir o arquivo com contexto de erro
-    let file = File::open(path).map_err(|e| {
-        format!("Falha ao abrir o arquivo de configuração '{}': {}", path, e)
-    })?;
+    let file = File::open(path)
+        .map_err(|e| format!("Falha ao abrir o arquivo de configuração '{}': {}", path, e))?;
 
     // 3. Lê e faz o Parse
     let reader = BufReader::new(file);
 
     // Captura erro de JSON inválido (ex: falta vírgula)
-    let config = serde_json::from_reader(reader).map_err(|e| {
-        format!("Erro de sintaxe no JSON do arquivo '{}': {}", path, e)
-    })?;
+    let config = serde_json::from_reader(reader)
+        .map_err(|e| format!("Erro de sintaxe no JSON do arquivo '{}': {}", path, e))?;
 
     Ok(config)
 }
@@ -49,7 +47,11 @@ pub fn load_config(custom_path: Option<&str>) -> Result<Config, Box<dyn Error>> 
 /// * `url` - A URL completa da API.
 /// * `caminho_destino` - Onde salvar o arquivo cru (ex: "data/raw_temp.json").
 ///
-pub fn fetch_data_to_disk(client: &Client, url: &str, caminho_destino: &str) -> Result<(), Box<dyn Error>> {
+pub fn fetch_data_to_disk(
+    client: &Client,
+    url: &str,
+    caminho_destino: &str,
+) -> Result<(), Box<dyn Error>> {
     // 1. Configura e envia a requisição
     let mut response = client
         .get(url)
@@ -69,13 +71,21 @@ pub fn fetch_data_to_disk(client: &Client, url: &str, caminho_destino: &str) -> 
     pb.set_message(format!("Baixando {}", caminho_destino));
 
     // 3. Cria o arquivo
-    let mut arquivo_destino = File::create(caminho_destino)
-        .map_err(|e| format!("Não foi possível criar o arquivo '{}': {}", caminho_destino, e))?;
+    let mut arquivo_destino = File::create(caminho_destino).map_err(|e| {
+        format!(
+            "Não foi possível criar o arquivo '{}': {}",
+            caminho_destino, e
+        )
+    })?;
 
     // 4. Stream: Rede -> Barra -> Disco
     let mut source = pb.wrap_read(&mut response);
-    io::copy(&mut source, &mut arquivo_destino)
-        .map_err(|e| format!("Erro durante a escrita no disco para '{}': {}", caminho_destino, e))?;
+    io::copy(&mut source, &mut arquivo_destino).map_err(|e| {
+        format!(
+            "Erro durante a escrita no disco para '{}': {}",
+            caminho_destino, e
+        )
+    })?;
 
     pb.finish_with_message(format!("Download concluído: {}", caminho_destino));
 

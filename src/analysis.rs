@@ -1,8 +1,8 @@
 use polars::prelude::*;
 use serde_json::Value;
+use std::error::Error;
 use std::fs::File;
 use std::io::{BufReader, Cursor};
-use std::error::Error;
 
 /// Processa um arquivo JSON bruto contendo um envelope da API e converte os dados extraídos para Parquet.
 ///
@@ -27,8 +27,10 @@ use std::error::Error;
 /// * O campo `resultado` não for uma lista (Array).
 /// * Ocorrer um erro interno no Polars durante a inferência de tipos ou escrita do Parquet.
 ///
-pub fn process_raw_to_parquet(input_path: &str, output_path: &str) -> Result<(usize, usize), Box<dyn Error>> {
-
+pub fn process_raw_to_parquet(
+    input_path: &str,
+    output_path: &str,
+) -> Result<(usize, usize), Box<dyn Error>> {
     // 1. Leitura Bufferizada
     let file = File::open(input_path).map_err(|e| format!("Erro ao abrir arquivo bruto: {}", e))?;
     let reader = BufReader::new(file);
@@ -37,10 +39,12 @@ pub fn process_raw_to_parquet(input_path: &str, output_path: &str) -> Result<(us
     let json_envelope: Value = serde_json::from_reader(reader)?;
 
     // 3. Extração Segura do Array
-    let lista_dados = json_envelope.get("resultado")
+    let lista_dados = json_envelope
+        .get("resultado")
         .ok_or("Campo 'resultado' ausente no JSON.")?;
 
-    let array_dados = lista_dados.as_array()
+    let array_dados = lista_dados
+        .as_array()
         .ok_or("O campo 'resultado' não é uma lista válida.")?;
 
     // Proteção contra lista vazia

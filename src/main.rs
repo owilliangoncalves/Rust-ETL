@@ -1,13 +1,13 @@
+mod analysis;
 mod api;
 mod models;
-mod analysis;
 
+use reqwest::blocking::Client;
+use std::env;
+use std::error::Error;
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::error::Error;
 use std::time::Instant;
-use std::env;
-use reqwest::blocking::Client;
 
 /// Orquestra a execução do pipeline de dados (ETL).
 ///
@@ -113,7 +113,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 if let Err(e) = fs::remove_file(&caminho_raw) {
                     eprintln!("    [AVISO] Falha ao limpar temp: {}", e);
                 }
-            },
+            }
             Err(e) => eprintln!("    [ERRO] Falha crítica na conversão: {}", e),
         }
     }
