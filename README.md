@@ -62,7 +62,6 @@ Crie um arquivo `config.json` na raiz do projeto:
     "[FOO]": "[FOO]"
   }
 }
-
 ```
 
 ## ▶️ Como Usar
@@ -73,7 +72,6 @@ Busca automaticamente pelo arquivo `config.json` na raiz:
 
 ```bash
 cargo run --release
-
 ```
 
 ### Configuração Personalizada
@@ -81,7 +79,7 @@ cargo run --release
 Você pode passar o caminho de um arquivo de configuração específico como argumento:
 
 ```bash
-cargo run --release -- config.json
+cargo run --release --config.json
 
 ```
 
