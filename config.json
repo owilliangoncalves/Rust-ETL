@@ -45,6 +45,12 @@
     "legado_sem_licitacao_id": "/modulo-legado/5.1_consultarCompraSemLicitacao_Id",
     "legado_sem_licitacao_itens": "/modulo-legado/6_consultarCompraItensSemLicitacao",
     "legado_sem_licitacao_itens_id": "/modulo-legado/6.1_consultarItensComprasSemLicitacao_Id",
-    "consulta_rdc": "/modulo-legado/7_consultarRdc"
+    "consulta_rdc": "/modulo-legado/7_consultarRdc",
+    "contratacoes_PNCP_1433": "/modulo-contratacoes/1_consultarContratacoes_PNCP_14133",
+    "contratacoes_PNCP_1433_id": "/modulo-contratacoes/1.1_consultarContratacoes_PNCP_14133_Id",
+    "contratacoes_PNCP_1433_itens": "/modulo-contratacoes/2_consultarItensContratacoes_PNCP_14133",
+    "contratacoes_PNCP_1433_itens_id": "/modulo-contratacoes/2.1_consultarItensContratacoes_PNCP_14133_Id",
+    "contratacoes_PNCP_1433_resultado": "/modulo-contratacoes/3_consultarResultadoItensContratacoes_PNCP_14133",
+    "contratacoes_PNCP_1433_resultado_id": "/modulo-contratacoes/3.1_consultarResultadoItensContratacoes_PNCP_14133_Id"
   }
 }
