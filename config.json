@@ -7,6 +7,15 @@
     "item_material": "/modulo-material/4_consultarItemMaterial",
     "natureza_despeza_material": "/modulo-material/5_consultarMaterialNaturezaDespesa",
     "unidade_fornecimento_material": "/modulo-material/6_consultarMaterialUnidadeFornecimento",
-    "caracteristicas_material": "/modulo-material/7_consultarMaterialCaracteristicas"
+    "caracteristicas_material": "/modulo-material/7_consultarMaterialCaracteristicas",
+    "secao_servico": "/modulo-servico/1_consultarSecaoServico",
+    "divisao_servico": "/modulo-servico/2_consultarDivisaoServico",
+    "grupo_servico": "/modulo-servico/3_consultarGrupoServico",
+    "classe_servico": "/modulo-servico/4_consultarClasseServico",
+    "subclasse_servico": "/modulo-servico/5_consultarSubClasseServico",
+    "item_servico": "/modulo-servico/6_consultarItemServico",
+    "unid_medida_servico": "/modulo-servico/7_consultarUndMedidaServico",
+    "natureza_despesa_servico": "/modulo-servico/8_consultarNaturezaDespesaServico"
+
   }
 }
