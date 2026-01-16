@@ -64,6 +64,8 @@
     "contratos_id": "/modulo-contratos/1.1_consultarContratos_Id",
     "contratos_fim_vigencia": "/modulo-contratos/1.2_consultarContratos_FimVigencia",
     "contratos_item": "/modulo-contratos/2_consultarContratosItem",
-    "contratos_item_id": "/modulo-contratos/2.1_consultarContratosItem_Id"
+    "contratos_item_id": "/modulo-contratos/2.1_consultarContratosItem_Id",
+    "fornecedor": "/modulo-fornecedor/1_consultarFornecedor",
+    "ocds": "/modulo-ocds/1_releases"
   }
 }
