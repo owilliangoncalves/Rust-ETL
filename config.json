@@ -15,7 +15,13 @@
     "subclasse_servico": "/modulo-servico/5_consultarSubClasseServico",
     "item_servico": "/modulo-servico/6_consultarItemServico",
     "unid_medida_servico": "/modulo-servico/7_consultarUndMedidaServico",
-    "natureza_despesa_servico": "/modulo-servico/8_consultarNaturezaDespesaServico"
-
+    "natureza_despesa_servico": "/modulo-servico/8_consultarNaturezaDespesaServico",
+    "preco_material_a": "/modulo-pesquisa-preco/1_consultarMaterial",
+    "preco_material_b": "/modulo-pesquisa-preco/1.1_consultarMaterial_CSV",
+    "preco_detalhe_material": "/modulo-pesquisa-preco/2.1_consultarMaterialDetalhe_CSV",
+    "preco_servico_a": "/modulo-pesquisa-preco/3_consultarServico",
+    "preco_servico_b": "/modulo-pesquisa-preco/3.1_consultarServico_CSV",
+    "preco_servico_detalhe": "/modulo-pesquisa-preco/4_consultarServicoDetalhe",
+    "preco_servico_detalhe_b": "/modulo-pesquisa-preco/4.1_consultarServicoDetalhe_CSV"
   }
 }
