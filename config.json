@@ -51,6 +51,14 @@
     "contratacoes_PNCP_1433_itens": "/modulo-contratacoes/2_consultarItensContratacoes_PNCP_14133",
     "contratacoes_PNCP_1433_itens_id": "/modulo-contratacoes/2.1_consultarItensContratacoes_PNCP_14133_Id",
     "contratacoes_PNCP_1433_resultado": "/modulo-contratacoes/3_consultarResultadoItensContratacoes_PNCP_14133",
-    "contratacoes_PNCP_1433_resultado_id": "/modulo-contratacoes/3.1_consultarResultadoItensContratacoes_PNCP_14133_Id"
+    "contratacoes_PNCP_1433_resultado_id": "/modulo-contratacoes/3.1_consultarResultadoItensContratacoes_PNCP_14133_Id",
+    "arp": "/modulo-arp/1_consultarARP",
+    "arp_id": "/modulo-arp/1.1_consultarARP_Id",
+    "arp_fim_vigencia": "/modulo-arp/1.2_consultarARP_FimVigencia",
+    "arp_item": "/modulo-arp/2_consultarARPItem",
+    "arp_item_id": "/modulo-arp/2.1_consultarARPItem_Id",
+    "arp_unidades_item": "/modulo-arp/3_consultarUnidadesItem",
+    "arp_saldo_item": "/modulo-arp/4_consultarEmpenhosSaldoItem",
+    "arp_adesoes_item": "/modulo-arp/5_consultarAdesoesItem"
   }
 }
