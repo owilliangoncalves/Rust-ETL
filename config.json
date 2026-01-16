@@ -22,6 +22,12 @@
     "preco_servico_a": "/modulo-pesquisa-preco/3_consultarServico",
     "preco_servico_b": "/modulo-pesquisa-preco/3.1_consultarServico_CSV",
     "preco_servico_detalhe": "/modulo-pesquisa-preco/4_consultarServicoDetalhe",
-    "preco_servico_detalhe_b": "/modulo-pesquisa-preco/4.1_consultarServicoDetalhe_CSV"
+    "preco_servico_detalhe_b": "/modulo-pesquisa-preco/4.1_consultarServicoDetalhe_CSV",
+    "pgc_detalhe": "/modulo-pgc/1_consultarPgcDetalhe",
+    "pgc_detalhe_b": "/modulo-pgc/1.1_consultarPgcDetalhe_CSV",
+    "pgc_detalhe_catalogo": "/modulo-pgc/2_consultarPgcDetalheCatalogo",
+    "pgc_detalhe_catalogo_b": "/modulo-pgc/2.1_consultarPgcDetalheCatalogo_CSV",
+    "pgc_agregacao": "/modulo-pgc/3_consultarPgcAgregacao",
+    "pgc_agregacao_b": "/modulo-pgc/3.1_consultarPgcAgregacao_CSV"
   }
 }
