@@ -28,6 +28,10 @@
     "pgc_detalhe_catalogo": "/modulo-pgc/2_consultarPgcDetalheCatalogo",
     "pgc_detalhe_catalogo_b": "/modulo-pgc/2.1_consultarPgcDetalheCatalogo_CSV",
     "pgc_agregacao": "/modulo-pgc/3_consultarPgcAgregacao",
-    "pgc_agregacao_b": "/modulo-pgc/3.1_consultarPgcAgregacao_CSV"
+    "pgc_agregacao_b": "/modulo-pgc/3.1_consultarPgcAgregacao_CSV",
+    "usag_consulta": "/modulo-uasg/1_consultarUasg",
+    "usag_consulta_b": "/modulo-uasg/1.1_consultarUasg_CSV",
+    "usag_orgao": "/modulo-uasg/2_consultarOrgao",
+    "usag_orgao_b": "/modulo-uasg/2.1_consultarOrgao_CSV"
   }
 }
