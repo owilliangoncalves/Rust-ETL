@@ -66,6 +66,9 @@
     "contratos_item": "/modulo-contratos/2_consultarContratosItem",
     "contratos_item_id": "/modulo-contratos/2.1_consultarContratosItem_Id",
     "fornecedor": "/modulo-fornecedor/1_consultarFornecedor",
-    "ocds": "/modulo-ocds/1_releases"
+    "ocds": "/modulo-ocds/1_releases",
+    "alice_avisos_restritos": "/alice/avisos-restritos",
+    "alice_compras": "/alice/compras",
+    "alice_tickets": "/alice/tickets"
   }
 }
