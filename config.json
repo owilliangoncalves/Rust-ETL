@@ -59,6 +59,11 @@
     "arp_item_id": "/modulo-arp/2.1_consultarARPItem_Id",
     "arp_unidades_item": "/modulo-arp/3_consultarUnidadesItem",
     "arp_saldo_item": "/modulo-arp/4_consultarEmpenhosSaldoItem",
-    "arp_adesoes_item": "/modulo-arp/5_consultarAdesoesItem"
+    "arp_adesoes_item": "/modulo-arp/5_consultarAdesoesItem",
+    "contratos_": "/modulo-contratos/1_consultarContratos",
+    "contratos_id": "/modulo-contratos/1.1_consultarContratos_Id",
+    "contratos_fim_vigencia": "/modulo-contratos/1.2_consultarContratos_FimVigencia",
+    "contratos_item": "/modulo-contratos/2_consultarContratosItem",
+    "contratos_item_id": "/modulo-contratos/2.1_consultarContratosItem_Id"
   }
 }
