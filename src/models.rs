@@ -3,7 +3,7 @@ use std::collections::HashMap;
 
 /// Representa a configuração global do pipeline de dados.
 ///
-/// Esta estrutura é responsável por mapear o arquivo `config.json` para objetos em memória.
+/// Esta estrutura é responsável por mapear o arquivo `endpoints.json` para objetos em memória.
 /// Ela atua como a "Fonte da Verdade" para as URLs e recursos que serão processados.
 ///
 #[derive(Debug, Serialize, Deserialize, Clone)]
