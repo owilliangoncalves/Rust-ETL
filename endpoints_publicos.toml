@@ -1,11 +1,21 @@
-# ==============================================================================
-#Compras Governamentais
-# ==============================================================================
+# Configuração Universal de ETL para APIs
+#
+# Estrutura:
+# [nome_api]
+# base_url = "https://..."
+#
+# [nome_api.endpoints.nome_grupo]
+# root_path = "chave_raiz"
+# chave_endpoint = "/caminho"
+
+
+
+#Compras
 [compras_federal]
 base_url = "https://dadosabertos.compras.gov.br"
 
-# --- Módulo: Materiais ---
 [compras_federal.endpoints.material]
+root_path = "resultado"
 grupo = "/modulo-material/1_consultarGrupoMaterial"
 classe = "/modulo-material/2_consultarClasseMaterial"
 pdm = "/modulo-material/3_consultarPdmMaterial"
@@ -14,8 +24,8 @@ natureza_despesa = "/modulo-material/5_consultarMaterialNaturezaDespesa"
 unidade_fornecimento = "/modulo-material/6_consultarMaterialUnidadeFornecimento"
 caracteristicas = "/modulo-material/7_consultarMaterialCaracteristicas"
 
-# --- Módulo: Serviços ---
 [compras_federal.endpoints.servico]
+root_path = "resultado"
 secao = "/modulo-servico/1_consultarSecaoServico"
 divisao = "/modulo-servico/2_consultarDivisaoServico"
 grupo = "/modulo-servico/3_consultarGrupoServico"
@@ -25,34 +35,25 @@ item = "/modulo-servico/6_consultarItemServico"
 unidade_medida = "/modulo-servico/7_consultarUndMedidaServico"
 natureza_despesa = "/modulo-servico/8_consultarNaturezaDespesaServico"
 
-# --- Módulo: Pesquisa de Preço ---
 [compras_federal.endpoints.pesquisa_preco]
+root_path = "resultado"
 material_json = "/modulo-pesquisa-preco/1_consultarMaterial"
-material_csv = "/modulo-pesquisa-preco/1.1_consultarMaterial_CSV"
-material_detalhe_csv = "/modulo-pesquisa-preco/2.1_consultarMaterialDetalhe_CSV"
 servico_json = "/modulo-pesquisa-preco/3_consultarServico"
-servico_csv = "/modulo-pesquisa-preco/3.1_consultarServico_CSV"
 servico_detalhe_json = "/modulo-pesquisa-preco/4_consultarServicoDetalhe"
-servico_detalhe_csv = "/modulo-pesquisa-preco/4.1_consultarServicoDetalhe_CSV"
 
-# --- Módulo: PGC ---
 [compras_federal.endpoints.pgc]
+root_path = "resultado"
 detalhe = "/modulo-pgc/1_consultarPgcDetalhe"
-detalhe_csv = "/modulo-pgc/1.1_consultarPgcDetalhe_CSV"
 catalogo = "/modulo-pgc/2_consultarPgcDetalheCatalogo"
-catalogo_csv = "/modulo-pgc/2.1_consultarPgcDetalheCatalogo_CSV"
 agregacao = "/modulo-pgc/3_consultarPgcAgregacao"
-agregacao_csv = "/modulo-pgc/3.1_consultarPgcAgregacao_CSV"
 
-# --- Módulo: UASG ---
 [compras_federal.endpoints.uasg]
+root_path = "resultado"
 consulta = "/modulo-uasg/1_consultarUasg"
-consulta_csv = "/modulo-uasg/1.1_consultarUasg_CSV"
 orgao = "/modulo-uasg/2_consultarOrgao"
-orgao_csv = "/modulo-uasg/2.1_consultarOrgao_CSV"
 
-# --- Módulo: Legado ---
 [compras_federal.endpoints.legado]
+root_path = "resultado"
 licitacao = "/modulo-legado/1_consultarLicitacao"
 licitacao_id = "/modulo-legado/1.1_consultarLicitacao_Id"
 item_licitacao = "/modulo-legado/2_consultarItemLicitacao"
@@ -67,8 +68,8 @@ sem_licitacao_itens = "/modulo-legado/6_consultarCompraItensSemLicitacao"
 sem_licitacao_itens_id = "/modulo-legado/6.1_consultarItensComprasSemLicitacao_Id"
 rdc = "/modulo-legado/7_consultarRdc"
 
-# --- Módulo: PNCP ---
 [compras_federal.endpoints.pncp]
+root_path = "resultado"
 contratacoes = "/modulo-contratacoes/1_consultarContratacoes_PNCP_14133"
 contratacoes_id = "/modulo-contratacoes/1.1_consultarContratacoes_PNCP_14133_Id"
 itens = "/modulo-contratacoes/2_consultarItensContratacoes_PNCP_14133"
@@ -76,8 +77,8 @@ itens_id = "/modulo-contratacoes/2.1_consultarItensContratacoes_PNCP_14133_Id"
 resultado = "/modulo-contratacoes/3_consultarResultadoItensContratacoes_PNCP_14133"
 resultado_id = "/modulo-contratacoes/3.1_consultarResultadoItensContratacoes_PNCP_14133_Id"
 
-# --- Módulo: ARP ---
 [compras_federal.endpoints.arp]
+root_path = "resultado"
 consulta = "/modulo-arp/1_consultarARP"
 consulta_id = "/modulo-arp/1.1_consultarARP_Id"
 fim_vigencia = "/modulo-arp/1.2_consultarARP_FimVigencia"
@@ -87,32 +88,32 @@ unidades_item = "/modulo-arp/3_consultarUnidadesItem"
 saldo_item = "/modulo-arp/4_consultarEmpenhosSaldoItem"
 adesoes_item = "/modulo-arp/5_consultarAdesoesItem"
 
-# --- Módulo: Contratos ---
 [compras_federal.endpoints.contratos]
+root_path = "resultado"
 consulta = "/modulo-contratos/1_consultarContratos"
 consulta_id = "/modulo-contratos/1.1_consultarContratos_Id"
 fim_vigencia = "/modulo-contratos/1.2_consultarContratos_FimVigencia"
 item = "/modulo-contratos/2_consultarContratosItem"
 item_id = "/modulo-contratos/2.1_consultarContratosItem_Id"
 
-# --- Outros ---
 [compras_federal.endpoints.outros]
+root_path = "resultado"
 fornecedor = "/modulo-fornecedor/1_consultarFornecedor"
 ocds = "/modulo-ocds/1_releases"
 
 [compras_federal.endpoints.alice]
+root_path = "resultado"
 avisos_restritos = "/alice/avisos-restritos"
 compras = "/alice/compras"
 tickets = "/alice/tickets"
 
-# ==============================================================================
-# Câmara dos Deputados (Legislativo Federal)
-# ==============================================================================
+
+# Câmara dos Deputados
 [camara_deputados]
 base_url = "https://dadosabertos.camara.leg.br/api/v2"
 
-# --- Grupo Geral ---
 [camara_deputados.endpoints.geral]
+root_path = "dados"
 lista_deputados = "/deputados"
 votacoes = "/votacoes"
 orgaos = "/orgaos"
@@ -125,9 +126,8 @@ eventos = "/eventos"
 referencias = "/referencias"
 lideres = "/lideres"
 
-# --- Grupo Proposições ---
 [camara_deputados.endpoints.proposicoes]
-# PSubstiituir pelo id
+root_path = "dados"
 busca = "/proposicoes"
 detalhe = "/proposicoes/{id}"
 autores = "/proposicoes/{id}/autores"
@@ -136,23 +136,23 @@ temas = "/proposicoes/{id}/temas"
 tramitacoes = "/proposicoes/{id}/tramitacoes"
 votacoes = "/proposicoes/{id}/votacoes"
 
-# --- Grupo Votações ---
 [camara_deputados.endpoints.votacoes]
+root_path = "dados"
 busca = "/votacoes"
 detalhe = "/votacoes/{id}"
 orientacoes = "/votacoes/{id}/orientacoes"
 votos = "/votacoes/{id}/votos"
 
-# --- Grupo Órgãos ---
 [camara_deputados.endpoints.orgaos]
+root_path = "dados"
 busca = "/orgaos"
 detalhe = "/orgaos/{id}"
 eventos = "/orgaos/{id}/eventos"
 membros = "/orgaos/{id}/membros"
 votacoes = "/orgaos/{id}/votacoes"
 
-# --- Grupo Referências (Proposições) ---
 [camara_deputados.endpoints.referencias_proposicoes]
+root_path = "dados"
 cod_situacao = "/referencias/proposicoes/codSituacao"
 cod_tema = "/referencias/proposicoes/codTema"
 cod_tipo_autor = "/referencias/proposicoes/codTipoAutor"
@@ -163,7 +163,7 @@ tipos_autor = "/referencias/tiposAutor"
 tipos_proposicao = "/referencias/tiposProposicao"
 tipos_tramitacao = "/referencias/tiposTramitacao"
 
-# --- Grupo Referências (Órgãos) ---
 [camara_deputados.endpoints.referencias_orgaos]
+root_path = "dados"
 cod_situacao = "/referencias/orgaos/codSituacao"
 situacoes_orgao = "/referencias/situacoesOrgao"
