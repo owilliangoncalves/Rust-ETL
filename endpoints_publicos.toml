@@ -1,10 +1,10 @@
 # ==============================================================================
-# Compras Governamentais (Executivo Federal)
+#Compras Governamentais
 # ==============================================================================
 [compras_federal]
 base_url = "https://dadosabertos.compras.gov.br"
 
-# --- Módulo: Materiais ---
+# --- Módulo: Materiais ---
 [compras_federal.endpoints.material]
 grupo = "/modulo-material/1_consultarGrupoMaterial"
 classe = "/modulo-material/2_consultarClasseMaterial"
@@ -14,7 +14,7 @@ natureza_despesa = "/modulo-material/5_consultarMaterialNaturezaDespesa"
 unidade_fornecimento = "/modulo-material/6_consultarMaterialUnidadeFornecimento"
 caracteristicas = "/modulo-material/7_consultarMaterialCaracteristicas"
 
-# --- Módulo: Serviços ---
+# --- Módulo: Serviços ---
 [compras_federal.endpoints.servico]
 secao = "/modulo-servico/1_consultarSecaoServico"
 divisao = "/modulo-servico/2_consultarDivisaoServico"
@@ -25,7 +25,7 @@ item = "/modulo-servico/6_consultarItemServico"
 unidade_medida = "/modulo-servico/7_consultarUndMedidaServico"
 natureza_despesa = "/modulo-servico/8_consultarNaturezaDespesaServico"
 
-# --- Módulo: Pesquisa de Preço ---
+# --- Módulo: Pesquisa de Preço ---
 [compras_federal.endpoints.pesquisa_preco]
 material_json = "/modulo-pesquisa-preco/1_consultarMaterial"
 material_csv = "/modulo-pesquisa-preco/1.1_consultarMaterial_CSV"
@@ -35,7 +35,7 @@ servico_csv = "/modulo-pesquisa-preco/3.1_consultarServico_CSV"
 servico_detalhe_json = "/modulo-pesquisa-preco/4_consultarServicoDetalhe"
 servico_detalhe_csv = "/modulo-pesquisa-preco/4.1_consultarServicoDetalhe_CSV"
 
-# --- Módulo: PGC (Planejamento e Gerenciamento) ---
+# --- Módulo: PGC ---
 [compras_federal.endpoints.pgc]
 detalhe = "/modulo-pgc/1_consultarPgcDetalhe"
 detalhe_csv = "/modulo-pgc/1.1_consultarPgcDetalhe_CSV"
@@ -44,14 +44,14 @@ catalogo_csv = "/modulo-pgc/2.1_consultarPgcDetalheCatalogo_CSV"
 agregacao = "/modulo-pgc/3_consultarPgcAgregacao"
 agregacao_csv = "/modulo-pgc/3.1_consultarPgcAgregacao_CSV"
 
-# --- Módulo: UASG (Unidades Administrativas) ---
+# --- Módulo: UASG ---
 [compras_federal.endpoints.uasg]
 consulta = "/modulo-uasg/1_consultarUasg"
 consulta_csv = "/modulo-uasg/1.1_consultarUasg_CSV"
 orgao = "/modulo-uasg/2_consultarOrgao"
 orgao_csv = "/modulo-uasg/2.1_consultarOrgao_CSV"
 
-# --- Módulo: Legado (Sistemas Antigos) ---
+# --- Módulo: Legado ---
 [compras_federal.endpoints.legado]
 licitacao = "/modulo-legado/1_consultarLicitacao"
 licitacao_id = "/modulo-legado/1.1_consultarLicitacao_Id"
@@ -67,7 +67,7 @@ sem_licitacao_itens = "/modulo-legado/6_consultarCompraItensSemLicitacao"
 sem_licitacao_itens_id = "/modulo-legado/6.1_consultarItensComprasSemLicitacao_Id"
 rdc = "/modulo-legado/7_consultarRdc"
 
-# --- Módulo: PNCP (Lei 14.133 - Nova Lei de Licitações) ---
+# --- Módulo: PNCP ---
 [compras_federal.endpoints.pncp]
 contratacoes = "/modulo-contratacoes/1_consultarContratacoes_PNCP_14133"
 contratacoes_id = "/modulo-contratacoes/1.1_consultarContratacoes_PNCP_14133_Id"
@@ -76,7 +76,7 @@ itens_id = "/modulo-contratacoes/2.1_consultarItensContratacoes_PNCP_14133_Id"
 resultado = "/modulo-contratacoes/3_consultarResultadoItensContratacoes_PNCP_14133"
 resultado_id = "/modulo-contratacoes/3.1_consultarResultadoItensContratacoes_PNCP_14133_Id"
 
-# --- Módulo: ARP (Ata de Registro de Preços) ---
+# --- Módulo: ARP ---
 [compras_federal.endpoints.arp]
 consulta = "/modulo-arp/1_consultarARP"
 consulta_id = "/modulo-arp/1.1_consultarARP_Id"
@@ -87,7 +87,7 @@ unidades_item = "/modulo-arp/3_consultarUnidadesItem"
 saldo_item = "/modulo-arp/4_consultarEmpenhosSaldoItem"
 adesoes_item = "/modulo-arp/5_consultarAdesoesItem"
 
-# --- Módulo: Contratos ---
+# --- Módulo: Contratos ---
 [compras_federal.endpoints.contratos]
 consulta = "/modulo-contratos/1_consultarContratos"
 consulta_id = "/modulo-contratos/1.1_consultarContratos_Id"
@@ -95,7 +95,7 @@ fim_vigencia = "/modulo-contratos/1.2_consultarContratos_FimVigencia"
 item = "/modulo-contratos/2_consultarContratosItem"
 item_id = "/modulo-contratos/2.1_consultarContratosItem_Id"
 
-# --- Outros Módulos ---
+# --- Outros ---
 [compras_federal.endpoints.outros]
 fornecedor = "/modulo-fornecedor/1_consultarFornecedor"
 ocds = "/modulo-ocds/1_releases"
@@ -106,10 +106,64 @@ compras = "/alice/compras"
 tickets = "/alice/tickets"
 
 # ==============================================================================
-# Câmara dos Deputados (Legislativo Federal)
+# Câmara dos Deputados (Legislativo Federal)
 # ==============================================================================
 [camara_deputados]
 base_url = "https://dadosabertos.camara.leg.br/api/v2"
 
-[camara_deputados.endpoints]
+# --- Grupo Geral ---
+[camara_deputados.endpoints.geral]
 lista_deputados = "/deputados"
+votacoes = "/votacoes"
+orgaos = "/orgaos"
+partidos = "/partidos"
+legislatura = "/legislaturas"
+blocos = "/blocos"
+frentes = "/frentes"
+grupos = "/grupos"
+eventos = "/eventos"
+referencias = "/referencias"
+lideres = "/lideres"
+
+# --- Grupo Proposições ---
+[camara_deputados.endpoints.proposicoes]
+# PSubstiituir pelo id
+busca = "/proposicoes"
+detalhe = "/proposicoes/{id}"
+autores = "/proposicoes/{id}/autores"
+relacionadas = "/proposicoes/{id}/relacionadas"
+temas = "/proposicoes/{id}/temas"
+tramitacoes = "/proposicoes/{id}/tramitacoes"
+votacoes = "/proposicoes/{id}/votacoes"
+
+# --- Grupo Votações ---
+[camara_deputados.endpoints.votacoes]
+busca = "/votacoes"
+detalhe = "/votacoes/{id}"
+orientacoes = "/votacoes/{id}/orientacoes"
+votos = "/votacoes/{id}/votos"
+
+# --- Grupo Órgãos ---
+[camara_deputados.endpoints.orgaos]
+busca = "/orgaos"
+detalhe = "/orgaos/{id}"
+eventos = "/orgaos/{id}/eventos"
+membros = "/orgaos/{id}/membros"
+votacoes = "/orgaos/{id}/votacoes"
+
+# --- Grupo Referências (Proposições) ---
+[camara_deputados.endpoints.referencias_proposicoes]
+cod_situacao = "/referencias/proposicoes/codSituacao"
+cod_tema = "/referencias/proposicoes/codTema"
+cod_tipo_autor = "/referencias/proposicoes/codTipoAutor"
+cod_tipo_tramitacao = "/referencias/proposicoes/codTipoTramitacao"
+sigla_tipo = "/referencias/proposicoes/siglaTipo"
+situacoes_proposicao = "/referencias/situacoesProposicao"
+tipos_autor = "/referencias/tiposAutor"
+tipos_proposicao = "/referencias/tiposProposicao"
+tipos_tramitacao = "/referencias/tiposTramitacao"
+
+# --- Grupo Referências (Órgãos) ---
+[camara_deputados.endpoints.referencias_orgaos]
+cod_situacao = "/referencias/orgaos/codSituacao"
+situacoes_orgao = "/referencias/situacoesOrgao"
