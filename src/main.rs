@@ -23,7 +23,7 @@ use std::time::Instant;
 /// o arquivo de configuração.
 ///
 /// ```bash
-/// # Usa o padrão 'config.json'
+/// # Usa o padrão 'endpoints.json'
 /// cargo run
 ///
 /// # Usa um arquivo específico

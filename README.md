@@ -52,7 +52,7 @@ O sistema opera baseado em um arquivo JSON que mapeia os recursos da API.
 > API do governo pode sofrer alterações. Sempre verifique os nomes dos recursos e parâmetros disponíveis na documentação oficial:
 > [Dados Abertos Compras](https://dadosabertos.compras.gov.br/swagger-ui/index.html#/)
 
-Crie um arquivo `config.json` na raiz do projeto:
+Crie um arquivo `endpoints.json` na raiz do projeto:
 
 ```json
 {
@@ -68,7 +68,7 @@ Crie um arquivo `config.json` na raiz do projeto:
 
 ### Execução Padrão
 
-Busca automaticamente pelo arquivo `config.json` na raiz:
+Busca automaticamente pelo arquivo `endpoints.json` na raiz:
 
 ```bash
 cargo run --release
@@ -79,7 +79,7 @@ cargo run --release
 Você pode passar o caminho de um arquivo de configuração específico como argumento:
 
 ```bash
-cargo run --release --config.json
+cargo run --release --endpoints.json
 
 ```
 

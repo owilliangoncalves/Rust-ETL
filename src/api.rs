@@ -8,7 +8,7 @@ use std::io::{self, BufReader};
 /// Carrega as configurações do sistema a partir de um arquivo JSON.
 ///
 /// Se um caminho personalizado for fornecido (`Some(path)`), tenta carregar dele.
-/// Caso contrário (`None`), procura por "config.json" na raiz do projeto.
+/// Caso contrário (`None`), procura por "endpoints.json" na raiz do projeto.
 ///
 /// # Arguments
 ///
@@ -19,7 +19,7 @@ use std::io::{self, BufReader};
 /// Retorna a struct `Config` preenchida ou um erro se o arquivo não for encontrado/inválido.
 pub fn load_config(custom_path: Option<&str>) -> Result<Config, Box<dyn Error>> {
     // 1. Resolve o caminho (User Input OU Padrão)
-    let path = custom_path.unwrap_or("config.json");
+    let path = custom_path.unwrap_or("endpoints.json");
 
     // 2. Tenta abrir o arquivo com contexto de erro
     let file = File::open(path)
