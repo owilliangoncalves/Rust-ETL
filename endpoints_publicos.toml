@@ -1,0 +1,115 @@
+# ==============================================================================
+# Compras Governamentais (Executivo Federal)
+# ==============================================================================
+[compras_federal]
+base_url = "https://dadosabertos.compras.gov.br"
+
+# --- Módulo: Materiais ---
+[compras_federal.endpoints.material]
+grupo = "/modulo-material/1_consultarGrupoMaterial"
+classe = "/modulo-material/2_consultarClasseMaterial"
+pdm = "/modulo-material/3_consultarPdmMaterial"
+item = "/modulo-material/4_consultarItemMaterial"
+natureza_despesa = "/modulo-material/5_consultarMaterialNaturezaDespesa"
+unidade_fornecimento = "/modulo-material/6_consultarMaterialUnidadeFornecimento"
+caracteristicas = "/modulo-material/7_consultarMaterialCaracteristicas"
+
+# --- Módulo: Serviços ---
+[compras_federal.endpoints.servico]
+secao = "/modulo-servico/1_consultarSecaoServico"
+divisao = "/modulo-servico/2_consultarDivisaoServico"
+grupo = "/modulo-servico/3_consultarGrupoServico"
+classe = "/modulo-servico/4_consultarClasseServico"
+subclasse = "/modulo-servico/5_consultarSubClasseServico"
+item = "/modulo-servico/6_consultarItemServico"
+unidade_medida = "/modulo-servico/7_consultarUndMedidaServico"
+natureza_despesa = "/modulo-servico/8_consultarNaturezaDespesaServico"
+
+# --- Módulo: Pesquisa de Preço ---
+[compras_federal.endpoints.pesquisa_preco]
+material_json = "/modulo-pesquisa-preco/1_consultarMaterial"
+material_csv = "/modulo-pesquisa-preco/1.1_consultarMaterial_CSV"
+material_detalhe_csv = "/modulo-pesquisa-preco/2.1_consultarMaterialDetalhe_CSV"
+servico_json = "/modulo-pesquisa-preco/3_consultarServico"
+servico_csv = "/modulo-pesquisa-preco/3.1_consultarServico_CSV"
+servico_detalhe_json = "/modulo-pesquisa-preco/4_consultarServicoDetalhe"
+servico_detalhe_csv = "/modulo-pesquisa-preco/4.1_consultarServicoDetalhe_CSV"
+
+# --- Módulo: PGC (Planejamento e Gerenciamento) ---
+[compras_federal.endpoints.pgc]
+detalhe = "/modulo-pgc/1_consultarPgcDetalhe"
+detalhe_csv = "/modulo-pgc/1.1_consultarPgcDetalhe_CSV"
+catalogo = "/modulo-pgc/2_consultarPgcDetalheCatalogo"
+catalogo_csv = "/modulo-pgc/2.1_consultarPgcDetalheCatalogo_CSV"
+agregacao = "/modulo-pgc/3_consultarPgcAgregacao"
+agregacao_csv = "/modulo-pgc/3.1_consultarPgcAgregacao_CSV"
+
+# --- Módulo: UASG (Unidades Administrativas) ---
+[compras_federal.endpoints.uasg]
+consulta = "/modulo-uasg/1_consultarUasg"
+consulta_csv = "/modulo-uasg/1.1_consultarUasg_CSV"
+orgao = "/modulo-uasg/2_consultarOrgao"
+orgao_csv = "/modulo-uasg/2.1_consultarOrgao_CSV"
+
+# --- Módulo: Legado (Sistemas Antigos) ---
+[compras_federal.endpoints.legado]
+licitacao = "/modulo-legado/1_consultarLicitacao"
+licitacao_id = "/modulo-legado/1.1_consultarLicitacao_Id"
+item_licitacao = "/modulo-legado/2_consultarItemLicitacao"
+item_licitacao_id = "/modulo-legado/2.1_consultarItemLicitacao_Id"
+pregoes = "/modulo-legado/3_consultarPregoes"
+pregoes_id = "/modulo-legado/3.1_consultarPregoes_Id"
+pregoes_itens = "/modulo-legado/4_consultarItensPregoes"
+pregoes_itens_id = "/modulo-legado/4.1_consultarItensPregoes_Id"
+sem_licitacao = "/modulo-legado/5_consultarComprasSemLicitacao"
+sem_licitacao_id = "/modulo-legado/5.1_consultarCompraSemLicitacao_Id"
+sem_licitacao_itens = "/modulo-legado/6_consultarCompraItensSemLicitacao"
+sem_licitacao_itens_id = "/modulo-legado/6.1_consultarItensComprasSemLicitacao_Id"
+rdc = "/modulo-legado/7_consultarRdc"
+
+# --- Módulo: PNCP (Lei 14.133 - Nova Lei de Licitações) ---
+[compras_federal.endpoints.pncp]
+contratacoes = "/modulo-contratacoes/1_consultarContratacoes_PNCP_14133"
+contratacoes_id = "/modulo-contratacoes/1.1_consultarContratacoes_PNCP_14133_Id"
+itens = "/modulo-contratacoes/2_consultarItensContratacoes_PNCP_14133"
+itens_id = "/modulo-contratacoes/2.1_consultarItensContratacoes_PNCP_14133_Id"
+resultado = "/modulo-contratacoes/3_consultarResultadoItensContratacoes_PNCP_14133"
+resultado_id = "/modulo-contratacoes/3.1_consultarResultadoItensContratacoes_PNCP_14133_Id"
+
+# --- Módulo: ARP (Ata de Registro de Preços) ---
+[compras_federal.endpoints.arp]
+consulta = "/modulo-arp/1_consultarARP"
+consulta_id = "/modulo-arp/1.1_consultarARP_Id"
+fim_vigencia = "/modulo-arp/1.2_consultarARP_FimVigencia"
+item = "/modulo-arp/2_consultarARPItem"
+item_id = "/modulo-arp/2.1_consultarARPItem_Id"
+unidades_item = "/modulo-arp/3_consultarUnidadesItem"
+saldo_item = "/modulo-arp/4_consultarEmpenhosSaldoItem"
+adesoes_item = "/modulo-arp/5_consultarAdesoesItem"
+
+# --- Módulo: Contratos ---
+[compras_federal.endpoints.contratos]
+consulta = "/modulo-contratos/1_consultarContratos"
+consulta_id = "/modulo-contratos/1.1_consultarContratos_Id"
+fim_vigencia = "/modulo-contratos/1.2_consultarContratos_FimVigencia"
+item = "/modulo-contratos/2_consultarContratosItem"
+item_id = "/modulo-contratos/2.1_consultarContratosItem_Id"
+
+# --- Outros Módulos ---
+[compras_federal.endpoints.outros]
+fornecedor = "/modulo-fornecedor/1_consultarFornecedor"
+ocds = "/modulo-ocds/1_releases"
+
+[compras_federal.endpoints.alice]
+avisos_restritos = "/alice/avisos-restritos"
+compras = "/alice/compras"
+tickets = "/alice/tickets"
+
+# ==============================================================================
+# Câmara dos Deputados (Legislativo Federal)
+# ==============================================================================
+[camara_deputados]
+base_url = "https://dadosabertos.camara.leg.br/api/v2"
+
+[camara_deputados.endpoints]
+lista_deputados = "/deputados"
