@@ -27,3 +27,21 @@ pub enum ProcessorError {
     /// Violações de regras de negócio ou inconsistência de formato nos dados (ex: Schema mismatch).
     Schema(String),
 }
+/// Define erros específicos da camada de API/Rede.
+#[derive(Debug)]
+pub enum ApiError {
+    /// Falha na conexão, DNS ou handshake TLS.
+    NetworkError(reqwest::Error),
+
+    /// O servidor respondeu, mas com status HTTP de erro.
+    HttpStatusError {
+        status: reqwest::StatusCode,
+        url: String,
+    },
+
+    /// Falha ao criar diretórios ou escrever no disco.
+    FileSystemError(std::io::Error),
+
+    /// O servidor respondeu com sucesso, mas nenhum byte útil foi recebido.
+    EmptyResponse,
+}
