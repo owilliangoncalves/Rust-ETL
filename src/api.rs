@@ -1,93 +1,117 @@
-use crate::models::Config;
+//! # Módulo de Cliente HTTP e Download
+//!
+//! Este módulo gerencia todas as operações de Outbound Traffic.
+//! Encapsula a lógica de timeout, headers padrão e feedback visual de progresso.
+//!
+//! # Design
+//! Utiliza `reqwest::blocking` para simplicidade síncrona
+//! # Contratos
+//!
+//! - Apenas URLs HTTPS são aceitas
+//! - Streaming direto para disco
+//! - O ambiente é assumido como interativo (TTY) para exibição de progresso
+
 use indicatif::{ProgressBar, ProgressStyle};
 use reqwest::blocking::Client;
-use std::error::Error;
+use reqwest::header::{ACCEPT, USER_AGENT};
 use std::fs::File;
-use std::io::{self, BufReader};
+use std::io::{self};
+use std::path::Path;
+use std::time::Duration;
+use crate::errors::ApiError;
 
-/// Carrega as configurações do sistema a partir de um arquivo JSON.
+
+
+/// Constrói um Cliente HTTP com configurações padrão.
 ///
-/// Se um caminho personalizado for fornecido (`Some(path)`), tenta carregar dele.
-/// Caso contrário (`None`), procura por "endpoints.json" na raiz do projeto.
+/// - Timeout elevado para arquivos grandes
+/// - User-Agent explícito e auditável
+pub fn create_http_client() -> Result<Client, ApiError> {
+    Client::builder()
+        .timeout(Duration::from_secs(300))
+        .build()
+        .map_err(ApiError::NetworkError)
+}
+
+/// Realiza o download de um recurso remoto diretamente para o disco (Streaming).
+///
+/// ## Segurança
+///
+/// - Apenas URLs HTTPS são aceitas
+/// - Status HTTP é validado explicitamente
+///
+/// ## Eficiência de Memória
+///
+/// Streaming direto da rede para o arquivo, com uso constante de memória.
 ///
 /// # Arguments
 ///
-/// * `custom_path` - Um caminho opcional (`Option<&str>`) para o arquivo de configuração.
+/// * `client` - Instância reutilizável do `reqwest::Client`.
+/// * `url` - URL completa do recurso.
+/// * `destination` - Caminho local onde o arquivo será salvo.
 ///
 /// # Returns
 ///
-/// Retorna a struct `Config` preenchida ou um erro se o arquivo não for encontrado/inválido.
-pub fn load_config(custom_path: Option<&str>) -> Result<Config, Box<dyn Error>> {
-    // 1. Resolve o caminho (User Input OU Padrão)
-    let path = custom_path.unwrap_or("endpoints.json");
-
-    // 2. Tenta abrir o arquivo com contexto de erro
-    let file = File::open(path)
-        .map_err(|e| format!("Falha ao abrir o arquivo de configuração '{}': {}", path, e))?;
-
-    // 3. Lê e faz o Parse
-    let reader = BufReader::new(file);
-
-    // Captura erro de JSON inválido (ex: falta vírgula)
-    let config = serde_json::from_reader(reader)
-        .map_err(|e| format!("Erro de sintaxe no JSON do arquivo '{}': {}", path, e))?;
-
-    Ok(config)
-}
-
-/// Baixa o arquivo binário/texto direto para o disco sem carregar na RAM.
-///
-/// Esta função utiliza `std::io::copy`, que cria uma "mangueira" conectando
-/// o fluxo da internet (Response) direto ao arquivo no disco (File).
-/// O Rust usa um buffer interno minúsculo (geralmente 8KB) para fazer isso.
-/// Você pode baixar um arquivo de 100GB usando apenas KBs de RAM.
-///
-/// # Arguments
-/// * `client` - O cliente HTTP reutilizável.
-/// * `url` - A URL completa da API.
-/// * `caminho_destino` - Onde salvar o arquivo cru (ex: "data/raw_temp.json").
-///
-pub fn fetch_data_to_disk(
+/// Retorna o número de bytes escritos em disco.
+pub fn fetch_data_to_disk<P: AsRef<Path>>(
     client: &Client,
     url: &str,
-    caminho_destino: &str,
-) -> Result<(), Box<dyn Error>> {
-    // 1. Configura e envia a requisição
+    destination: P,
+) -> Result<u64, ApiError> {
+    if !url.starts_with("https://") {
+        return Err(ApiError::HttpStatusError {
+            status: reqwest::StatusCode::UPGRADE_REQUIRED,
+            url: url.to_string(),
+        });
+    }
+
+    let path = destination.as_ref();
+
+    if let Some(parent) = path.parent() {
+        std::fs::create_dir_all(parent).map_err(ApiError::FileSystemError)?;
+    }
+
     let mut response = client
         .get(url)
+        .header(USER_AGENT, "data-gov-client/1.0")
+        .header(ACCEPT, "*/*")
         .send()
-        .map_err(|e| format!("Falha na conexão com {}: {}", url, e))?
-        .error_for_status()
-        .map_err(|e| format!("Erro HTTP ao baixar {}: {}", url, e))?;
+        .map_err(ApiError::NetworkError)?;
 
-    // 2. Prepara a Barra de Progresso
+    let status = response.status();
+    if !status.is_success() {
+        return Err(ApiError::HttpStatusError {
+            status,
+            url: url.to_string(),
+        });
+    }
+
     let total_size = response.content_length().unwrap_or(0);
     let pb = ProgressBar::new(total_size);
 
-    pb.set_style(ProgressStyle::default_bar()
-        .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {bytes}/{total_bytes} ({eta})")?
-        .progress_chars("#>-"));
+    pb.set_style(
+        ProgressStyle::default_bar()
+            .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {bytes}/{total_bytes} ({eta})")
+            .unwrap_or_else(|_| ProgressStyle::default_bar())
+            .progress_chars("#>-"),
+    );
 
-    pb.set_message(format!("Baixando {}", caminho_destino));
+    let file_name = path.file_name().unwrap_or_default().to_string_lossy();
 
-    // 3. Cria o arquivo
-    let mut arquivo_destino = File::create(caminho_destino).map_err(|e| {
-        format!(
-            "Não foi possível criar o arquivo '{}': {}",
-            caminho_destino, e
-        )
-    })?;
+    pb.set_message(format!("Baixando {}", file_name));
 
-    // 4. Stream: Rede -> Barra -> Disco
-    let mut source = pb.wrap_read(&mut response);
-    io::copy(&mut source, &mut arquivo_destino).map_err(|e| {
-        format!(
-            "Erro durante a escrita no disco para '{}': {}",
-            caminho_destino, e
-        )
-    })?;
+    let mut file = File::create(path).map_err(ApiError::FileSystemError)?;
+    let mut stream_source = pb.wrap_read(&mut response);
 
-    pb.finish_with_message(format!("Download concluído: {}", caminho_destino));
+    let bytes_written =
+        io::copy(&mut stream_source, &mut file).map_err(ApiError::FileSystemError)?;
 
-    Ok(())
+    if bytes_written == 0 {
+        let _ = std::fs::remove_file(path);
+        pb.finish_with_message(format!("Conteúdo Vazio: {}", file_name));
+        return Err(ApiError::EmptyResponse);
+    }
+
+    pb.finish_with_message(format!("Download completo: {}", file_name));
+    Ok(bytes_written)
 }
