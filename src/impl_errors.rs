@@ -11,7 +11,7 @@ use std::error::Error as StdError;
 use std::fmt;
 
 // Importação do Enum de erros e da biblioteca Polars (necessária para o ETL)
-use crate::errors::ProcessorError;
+use crate::errors::{ApiError, ProcessorError};
 use polars::error::PolarsError;
 
 // Display
@@ -58,5 +58,28 @@ impl From<serde_json::Error> for ProcessorError {
 impl From<PolarsError> for ProcessorError {
     fn from(err: PolarsError) -> Self {
         ProcessorError::Parquet(err.to_string())
+    }
+}
+
+impl std::fmt::Display for ApiError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::NetworkError(e) => write!(f, "Falha de conexão: {}", e),
+            Self::HttpStatusError { status, url } => {
+                write!(f, "Erro {} em: {}", status, url)
+            }
+            Self::FileSystemError(e) => write!(f, "Erro de disco: {}", e),
+            Self::EmptyResponse => write!(f, "A resposta do servidor estava vazia."),
+        }
+    }
+}
+
+impl std::error::Error for ApiError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::NetworkError(e) => Some(e),
+            Self::FileSystemError(e) => Some(e),
+            _ => None,
+        }
     }
 }
