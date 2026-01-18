@@ -1,127 +1,119 @@
-mod analysis;
-mod api;
-mod models;
+//! # Metadata-Driven Data Pipeline
+//!
+//! ## Visão Geral
+//! Extração de dados de múltiplas APIs governamentais, aplicando
+//! transformações normalizadas via Polars com base em configurações dinâmicas.
+//!
+//! ## Princípios de Engenharia
+//! - **Resiliência (Fail-Soft)**: Erros individuais em endpoints não abortam o pipeline.
+//! - **Observabilidade**: Logs detalhados com tempos de execução por etapa.
+//! - **Atomização**: Garantia de que arquivos temporários sejam limpos apenas após o sucesso.
 
-use reqwest::blocking::Client;
+mod api;
+mod errors;
+mod impl_errors;
+mod models;
+mod processor;
+
 use std::env;
-use std::error::Error;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::time::Instant;
 
-/// Orquestra a execução do pipeline de dados (ETL).
-///
-/// Esta função gerencia o ciclo de vida completo dos dados:
-/// 1. **Setup:** Validação de diretórios e carregamento de configuração.
-/// 2. **Ingestão (Extract):** Download via stream para disco (Zero RAM overhead).
-/// 3. **Transformação (Transform):** Conversão de JSON bruto para Parquet com compressão.
-/// 4. **Limpeza (Cleanup):** Remoção de artefatos temporários.
-///
-/// # Usage
-///
-/// O programa aceita um argumento opcional via linha de comando para especificar
-/// o arquivo de configuração.
-///
-/// ```bash
-/// # Usa o padrão 'endpoints.json'
-/// cargo run
-///
-/// # Usa um arquivo específico
-/// cargo run -- config_prod.json
-/// ```
-///
-/// # Errors
-///
-/// A função retornará um erro (`Box<dyn Error>`) se:
-///
-/// * Ocorrer falha na criação do diretório `data`.
-/// * O arquivo de configuração não for encontrado ou contiver JSON inválido.
-/// * Ocorrerem erros fatais de I/O (ex: disco cheio, sem permissão).
-///
-/// *Nota: Erros individuais de download ou conversão de um endpoint específico
-/// são logados no console, mas não interrompem a execução dos demais.*
-fn main() -> Result<(), Box<dyn Error>> {
-    let inicio_global = Instant::now();
+use crate::models::Config;
 
-    println!("--- 🚀 INICIANDO PIPELINE DE DADOS USANDO RUST E POLARS 🐻‍❄️ ---");
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let global_timer = Instant::now();
 
-    // Definição do diretório de saída
-    let output_dir = Path::new("data");
+    println!("--- INICIANDO ETL PIPELINE ---");
 
-    // 1. Setup: Garante diretório de saída
-    if !output_dir.exists() {
-        println!(" -> Criando diretório de saída '{:?}'...", output_dir);
-        fs::create_dir(output_dir)?;
+    // Define o diretório base para armazenamento físico
+    let data_root = Path::new("data");
+    if !data_root.exists() {
+        fs::create_dir_all(data_root)?;
     }
 
-    // 2. Configuração: Leitura via CLI ou Padrão
-    let args: Vec<String> = env::args().collect();
-    let config_path = args.get(1).map(|s| s.as_str());
+    // Carrega configuração TOML (permite passar caminho via CLI)
+    let config_path = env::args()
+        .nth(1)
+        .unwrap_or_else(|| "endpoints_publicos.toml".to_string());
 
-    let config = api::load_config(config_path)?;
-    println!(" -> Configuração carregada. Base URL: {}", config.base_url);
-
-    // 3. Otimização: Client HTTP Keep-Alive
-    let client = Client::new();
-
-    // 4. Loop de Processamento
-    for (nome, endpoint) in &config.endpoints {
-        let url = format!("{}{}", config.base_url, endpoint);
-
-        println!("\n==========================================");
-        println!("PROCESSANDO: {}", nome);
-
-        // Construção segura de caminhos (PathBuf)
-        let caminho_raw: PathBuf = output_dir.join(format!("raw_{}.json", nome));
-        let caminho_parquet: PathBuf = output_dir.join(format!("{}.parquet", nome));
-
-        // Conversão para str para uso nas funções (unwrap seguro pois definimos os nomes acima)
-        let raw_str = caminho_raw.to_str().unwrap();
-        let parquet_str = caminho_parquet.to_str().unwrap();
-
-        // --- INGESTÃO ---
-        println!(" 1. 📥 Baixando stream...");
-        match api::fetch_data_to_disk(&client, &url, raw_str) {
-            Ok(_) => println!("    [OK] Download concluído."),
-            Err(e) => {
-                eprintln!("    [ERRO] Falha no download: {}", e);
-                continue; // Fail-soft: Pula para o próximo item
-            }
+    let config = match Config::load_from_file(&config_path) {
+        Ok(c) => c,
+        Err(e) => {
+            eprintln!("Erro na carga de configuração: {}", e);
+            std::process::exit(1);
         }
+    };
 
-        // --- TRANSFORMAÇÃO ---
-        println!(" 2. ⚙️ Convertendo para Parquet...");
+    // Reuso de conexões/Keep-alive para performance
+    let client = api::create_http_client()?;
 
-        // Verificação de arquivo vazio
-        if fs::metadata(&caminho_raw)?.len() == 0 {
-            eprintln!("    [AVISO] Arquivo vazio baixado. Ignorando.");
-            let _ = fs::remove_file(&caminho_raw);
-            continue;
-        }
+    for (api_name, api_config) in &config.apis {
+        println!("\n Domínio: {}", api_name.to_uppercase());
 
-        match analysis::process_raw_to_parquet(raw_str, parquet_str) {
-            Ok((linhas, colunas)) => {
-                if linhas == 0 {
-                    println!("    ⚠️  Arquivo gerado sem dados (Lista vazia).");
-                } else {
-                    println!("    [OK] Arquivo salvo: {}", parquet_str);
-                    println!("    Shape: {} linhas x {} colunas", linhas, colunas);
+        for (group_name, group_config) in &api_config.endpoints {
+            println!("Grupo: {}", group_name);
+
+            // Resgata metadado de normalização (root_path) do TOML
+            let root_path = group_config.root_path.as_deref();
+
+            // Garante estrutura de pastas: data/{api}/{grupo}
+            let group_dir = data_root.join(api_name).join(group_name);
+            fs::create_dir_all(&group_dir)?;
+
+            // Itera sobre as rotas dinâmicas capturadas pelo flatten
+            for key in group_config.routes.keys() {
+                let step_timer = Instant::now();
+
+                // Resolve URL completa
+                let url = match config.resolve_endpoint_url(api_name, group_name, key) {
+                    Ok(u) => u,
+                    Err(e) => {
+                        eprintln!("Erro ao resolver URL para '{}': {}", key, e);
+                        continue;
+                    }
+                };
+
+                // Pula endpoints que exigem substituição manual de ID {id}
+                if url.contains('{') {
+                    continue;
                 }
 
-                // --- LIMPEZA ---
-                println!(" 3. 🧹 Limpando temporários...");
-                if let Err(e) = fs::remove_file(&caminho_raw) {
-                    eprintln!("    [AVISO] Falha ao limpar temp: {}", e);
+                // Definição de caminhos físicos
+                let path_json = group_dir.join(format!("{}_temp.json", key));
+                let path_parquet = group_dir.join(format!("{}.parquet", key));
+
+                println!("Processando: {}", key);
+
+                if let Err(e) = api::fetch_data_to_disk(&client, &url, &path_json) {
+                    eprintln!("Falha no Download: {}", e);
+                    continue;
+                }
+
+                // Injeta o root_path específico de cada órgão/grupo
+                match processor::process_json_to_parquet(&path_json, &path_parquet, root_path) {
+                    Ok(_) => {
+                        println!(
+                            "Sucesso: Parquet gerado ({:.2?})",
+                            step_timer.elapsed()
+                        );
+                    }
+                    Err(e) => {
+                        eprintln!("Falha na Transformação: {}", e);
+                    }
                 }
             }
-            Err(e) => eprintln!("    [ERRO] Falha crítica na conversão: {}", e),
         }
     }
 
-    let duracao = inicio_global.elapsed();
     println!("\n==========================================");
-    println!("✅ PIPELINE FINALIZADO!");
-    println!("⏱️  Tempo Total: {:.2?}", duracao);
+    println!("Fim da extração e conversão de dados");
+    println!(
+        "Tempo de execução: {:.2?}",
+        global_timer.elapsed()
+    );
+    println!("==========================================");
 
     Ok(())
 }
